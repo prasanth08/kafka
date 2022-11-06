@@ -65,7 +65,7 @@ public class ByteBufferOutputStream extends OutputStream {
         ensureRemaining(1);
         buffer.put((byte) b);
     }
-
+    @Override
     public void write(byte[] bytes, int off, int len) {
         ensureRemaining(len);
         buffer.put(bytes, off, len);

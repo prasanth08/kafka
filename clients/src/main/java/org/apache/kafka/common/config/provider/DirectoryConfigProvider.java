@@ -87,7 +87,7 @@ public class DirectoryConfigProvider implements ConfigProvider {
                         .filter(fileFilter)
                         .collect(Collectors.toMap(
                             p -> p.getFileName().toString(),
-                            p -> read(p)));
+                                DirectoryConfigProvider::read));
                 } catch (IOException e) {
                     log.error("Could not list directory {}", dir, e);
                     throw new ConfigException("Could not list directory " + dir);

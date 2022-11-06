@@ -36,6 +36,7 @@ public final class ByteBufferInputStream extends InputStream {
         return buffer.get() & 0xFF;
     }
 
+    @Override
     public int read(byte[] bytes, int off, int len) {
         if (len == 0) {
             return 0;

@@ -112,14 +112,14 @@ public class ImplicitLinkedHashMultiCollection<E extends ImplicitLinkedHashColle
     }
 
     /**
-     * Returns all of the elements e in the collection such that
+     * Returns all the elements e in the collection such that
      * key.elementKeysAreEqual(e) and key.hashCode() == e.hashCode().
      *
      * @param key       The element to match.
      *
-     * @return          All of the matching elements.
+     * @return          All the matching elements.
      */
-    final public List<E> findAll(E key) {
+    public final List<E> findAll(E key) {
         if (key == null || size() == 0) {
             return Collections.emptyList();
         }

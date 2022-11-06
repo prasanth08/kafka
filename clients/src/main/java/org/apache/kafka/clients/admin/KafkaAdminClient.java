@@ -3216,7 +3216,7 @@ public class KafkaAdminClient extends AdminClient {
             .collect(Collectors.toSet());
     }
 
-    private final static class ListConsumerGroupsResults {
+    private static final class ListConsumerGroupsResults {
         private final List<Throwable> errors;
         private final HashMap<String, ConsumerGroupListing> listings;
         private final HashSet<Node> remaining;
@@ -3863,7 +3863,7 @@ public class KafkaAdminClient extends AdminClient {
         final String usernameMustNotBeEmptyMsg = "Username must not be empty";
         String passwordMustNotBeEmptyMsg = "Password must not be empty";
         final String unknownScramMechanismMsg = "Unknown SCRAM mechanism";
-        alterations.stream().filter(a -> a instanceof UserScramCredentialDeletion).forEach(alteration -> {
+        alterations.stream().filter(UserScramCredentialDeletion.class::isInstance).forEach(alteration -> {
             final String user = alteration.user();
             if (user == null || user.isEmpty()) {
                 userIllegalAlterationExceptions.put(alteration.user(), new UnacceptableCredentialException(usernameMustNotBeEmptyMsg));
@@ -3876,9 +3876,9 @@ public class KafkaAdminClient extends AdminClient {
             }
         });
         // Creating an upsertion may throw InvalidKeyException or NoSuchAlgorithmException,
-        // so keep track of which users are affected by such a failure so we can fail all their alterations later
+        // so keep track of which users are affected by such a failure, so we can fail all their alterations later
         final Map<String, Map<ScramMechanism, AlterUserScramCredentialsRequestData.ScramCredentialUpsertion>> userInsertions = new HashMap<>();
-        alterations.stream().filter(a -> a instanceof UserScramCredentialUpsertion)
+        alterations.stream().filter(UserScramCredentialUpsertion.class::isInstance)
                 .filter(alteration -> !userIllegalAlterationExceptions.containsKey(alteration.user()))
                 .forEach(alteration -> {
                     final String user = alteration.user();
@@ -3919,12 +3919,12 @@ public class KafkaAdminClient extends AdminClient {
             public AlterUserScramCredentialsRequest.Builder createRequest(int timeoutMs) {
                 return new AlterUserScramCredentialsRequest.Builder(
                         new AlterUserScramCredentialsRequestData().setUpsertions(alterations.stream()
-                                .filter(a -> a instanceof UserScramCredentialUpsertion)
+                                .filter(UserScramCredentialUpsertion.class::isInstance)
                                 .filter(a -> !userIllegalAlterationExceptions.containsKey(a.user()))
                                 .map(a -> userInsertions.get(a.user()).get(((UserScramCredentialUpsertion) a).credentialInfo().mechanism()))
                                 .collect(Collectors.toList()))
                         .setDeletions(alterations.stream()
-                                .filter(a -> a instanceof UserScramCredentialDeletion)
+                                .filter(UserScramCredentialDeletion.class::isInstance)
                                 .filter(a -> !userIllegalAlterationExceptions.containsKey(a.user()))
                                 .map(d -> getScramCredentialDeletion((UserScramCredentialDeletion) d))
                                 .collect(Collectors.toList())));
