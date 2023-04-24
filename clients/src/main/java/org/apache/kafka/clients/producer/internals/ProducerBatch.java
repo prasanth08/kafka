@@ -357,7 +357,7 @@ public final class ProducerBatch {
     /**
      * A callback and the associated FutureRecordMetadata argument to pass to it.
      */
-    private final static class Thunk {
+    private static final class Thunk {
         final Callback callback;
         final FutureRecordMetadata future;
 
